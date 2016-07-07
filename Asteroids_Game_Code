@@ -248,7 +248,7 @@ while startgame == 0:
                 if event.key == pygame.K_RETURN:
                     startgame = 1
             else:
-                message_display_title("Asteroidz")
+                message_display_title("Asteroids")
                 message_display("[Press Return to Play!]")
 
 game_loop()
