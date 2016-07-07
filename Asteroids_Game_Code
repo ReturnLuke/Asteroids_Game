@@ -1,0 +1,256 @@
+//Requires kspaceduel.png, navBar.png, asteroid-belt.png, explosion.ogg, boosters.wav, and kspaceduel_boost.png in directory to function
+//properly. These items can be found in Asteroids_Zip.
+
+import pygame
+import time
+import random
+
+pygame.init()
+
+display_width = 800
+display_height = 600
+
+gameDisplay = pygame.display.set_mode((display_width,display_height))
+
+black = (0,0,0)
+white = (255,255,255)
+red = (255,0,0)
+yellow = (255,255,224)
+gray = (105, 105, 105)
+
+craft_width = 70
+
+pygame.display.set_caption('Spaceship')
+
+clock = pygame.time.Clock()
+
+craftImg = pygame.image.load("kspaceduel.png")
+navBar = pygame.image.load("navBar.png")
+background_image = pygame.image.load("asteroid-belt.png")
+
+explosion_sound = pygame.mixer.Sound("explosion.ogg")
+boosters = pygame.mixer.Sound("boosters.wav")
+
+def stars(starsx, starsy, starsw, starsh, color):
+    pygame.draw.rect(gameDisplay, color, [starsx, starsy, starsw, starsh])
+
+def stars2(stars2x, stars2y, stars2w, stars2h, color):
+    pygame.draw.rect(gameDisplay, color, [stars2x, stars2y, stars2w, stars2h])
+
+def stars3(stars3x, stars3y, stars3w, stars3h, color):
+    pygame.draw.rect(gameDisplay, color, [stars3x, stars3y, stars3w, stars3h])
+
+def comet(cometx, comety, cometw, cometh, color):
+    pygame.draw.ellipse(gameDisplay, color, [cometx, comety, cometw, cometh])
+
+def comet2(comet2x, comet2y, comet2w, comet2h, color):
+    pygame.draw.ellipse(gameDisplay, color, [comet2x, comet2y, comet2w, comet2h])
+
+def craft(x,y):
+    gameDisplay.blit(craftImg, (x,y))
+
+def nav(x,y):
+    gameDisplay.blit(navBar, (x,y))
+
+def text_objects(text, font):
+    textSurface = font.render(text, True, white)
+    return textSurface, textSurface.get_rect()
+
+def text_objects2(text, font):
+    textSurface = font.render(text, True, white)
+    return textSurface, textSurface.get_rect()
+
+def message_display(text):
+    largeText = pygame.font.SysFont("Comicsansms", 30)
+    TextSurf, TextRect = text_objects(text, largeText)
+    TextRect.center = ((display_width/2), (display_height/2))
+    gameDisplay.blit(TextSurf, TextRect)
+
+    pygame.display.update()
+
+def message_display_title(text):
+    largeText = pygame.font.SysFont("Comicsansms", 100)
+    TextSurf, TextRect = text_objects(text, largeText)
+    TextRect.center = ((display_width/2), (display_height/2.5))
+    gameDisplay.blit(TextSurf, TextRect)
+
+    pygame.display.update()
+
+def message_display_speed(text):
+    largeText = pygame.font.SysFont("Comicsansms", 20)
+    TextSurf, TextRect = text_objects2(text, largeText)
+    TextRect.center = ((display_width * 0.1), (display_height * 0.96))
+    gameDisplay.blit(TextSurf, TextRect)
+
+def play_again():
+    end_game = 0
+    explosion_sound.play()
+    while end_game == 0:
+        message_display("Play again? Y/N")
+        for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_y:
+                        game_loop()
+                    if event.key == pygame.K_n:
+                        end_game = 1
+    pygame.quit()
+             
+def game_loop():
+    x = (display_width * 0.45)
+    y = (display_height * 0.60)
+
+    x_change = 0
+
+    shield = 3
+
+    speed = 0
+
+    comet_startx = random.randrange(0, display_width * 0.3)
+    comet_starty = -600
+    comet_speed = 4
+    comet_width = 25
+    comet_height = 40
+
+    comet2_startx = random.randrange(0, display_width * 0.3)
+    comet2_starty = -600
+    comet2_speed = 2
+    comet2_width = 30
+    comet2_height = 48
+
+    stars_startx = random.randrange(0, display_width)
+    stars_starty = -600
+    stars_speed = 10
+    stars_width = 2
+    stars_height = 2
+
+    stars2_startx = random.randrange(0, display_width)
+    stars2_starty = -600
+    stars2_speed = 15
+    stars2_width = 2
+    stars2_height = 2
+
+    stars3_startx = random.randrange(0, display_width)
+    stars3_starty = -600
+    stars3_speed = 20
+    stars3_width = 2
+    stars3_height = 2
+
+    gameExit = False
+
+    while not gameExit:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                gameExit = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    x_change = -7
+                elif event.key == pygame.K_RIGHT:
+                    x_change = 7
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    x_change = 0
+
+        x += x_change
+
+        gameDisplay.fill(black)
+        gameDisplay.blit(background_image, [0, 0])
+
+        speed = speed + 0.005
+
+        comet(comet_startx, comet_starty, comet_width,
+                comet_height, gray)
+        comet_starty += comet_speed
+
+        comet2(comet2_startx, comet2_starty, comet2_width,
+                comet2_height, gray)
+        comet2_starty += comet2_speed
+
+        stars(stars_startx, stars_starty, stars_width,
+                stars_height, yellow)
+        stars_starty += stars_speed
+
+        stars2(stars2_startx, stars2_starty, stars2_width,
+                stars2_height, yellow)
+        stars2_starty += stars2_speed
+
+        stars3(stars3_startx, stars3_starty, stars3_width,
+                stars3_height, yellow)
+        stars3_starty += stars3_speed
+
+        if stars_starty > display_height:
+            stars_starty = 0 - comet_height
+            stars_startx = random.randrange(0, display_width)
+
+        if stars2_starty > display_height:
+            stars2_starty = 0 - comet_height
+            stars2_startx = random.randrange(0, display_width)
+
+        if stars3_starty > display_height:
+            stars3_starty = 0 - comet_height
+            stars3_startx = random.randrange(0, display_width)
+
+        if comet_starty > display_height:
+            comet_starty = 0 - comet_height
+            comet_startx = random.randrange(0, display_width)
+
+        if y < comet_starty + comet_height:
+            print ("y crossover")
+            if x > comet_startx and x < comet_startx + comet_width or x + craft_width > comet_startx and x + craft_width < comet_startx + comet_width:
+                print ("x crossover")
+                shield = shield - 3
+            else:
+                if comet_speed < 20:
+                    comet_speed += 0.0025
+
+        if comet2_starty > display_height:
+            comet2_starty = 0 - comet2_height
+            comet2_startx = random.randrange(0, display_width)
+
+        if y < comet2_starty + comet2_height:
+            print ("y crossover")
+            if x > comet2_startx and x < comet2_startx + comet2_width or x + craft_width > comet2_startx and x + craft_width < comet2_startx + comet2_width:
+                print ("x crossover")
+                shield = shield - 3
+
+        if shield <= 0:
+            play_again()
+
+        nav(display_width - display_width, display_height * 0.92)
+
+        if speed <= 10:
+            craft(x,y)
+        else:
+            craftImg = pygame.image.load("kspaceduel_boost.png")
+            gameDisplay.blit(craftImg, (x,y))
+        if speed > 10 and speed < 10.5:
+            boosters.play()
+        
+        message_display_speed("Speed: " + str(round(speed, 1)))
+
+        if x > display_width - craft_width:
+            x = x - 4.5
+        if x > display_width:
+            message_display("Out of range!")
+            shield = shield - 0.025
+        if x < 5:
+            x = x + 4.5
+        if x < - craft_width:
+            message_display("Out of range!")
+            shield = shield - 0.025
+
+        pygame.display.update()
+        clock.tick(90)
+
+startgame = 0
+while startgame == 0:
+    for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    startgame = 1
+            else:
+                message_display_title("Asteroidz")
+                message_display("[Press Return to Play!]")
+
+game_loop()
+pygame.quit()
+quit()
