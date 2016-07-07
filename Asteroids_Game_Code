@@ -1,5 +1,5 @@
 //Requires kspaceduel.png, navBar.png, asteroid-belt.png, explosion.ogg, boosters.wav, and kspaceduel_boost.png 
-//in same directory to function properly. These items can be found in Asteroids.7z.
+//within directory to function properly. These items can be found in Asteroids.7z.
 
 import pygame
 import time
